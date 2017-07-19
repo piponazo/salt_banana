@@ -1,0 +1,5 @@
+.vagrant/
+.idea/
+salt_root/etc/salt/pki/
+salt_root/etc/salt/minion_id
+salt_root/etc/salt/grains

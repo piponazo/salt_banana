@@ -1,0 +1,56 @@
+# salt_banana
+
+A mini project showing how to use saltstack for multiple minions following best practices (avoid duplication and littering of jinja conditionals in state files).
+
+As infrastructure we use Vagrant and VirtualBox for ease of use, but same salt configuration could be applied on a real or virtual cluster of computers.
+
+## WIP
+
+
+How to safely accept the minion keys.
+
+List all the minion keys as seen on the master:
+
+----
+$ vagrant ssh salt -c "sudo salt-key -F"
+Unaccepted Keys:
+fbsd:  44:55:04:dc:29:05:87:01:66:dc:4f:ca:3e:0d:63:39:77:52:65:11:89:96:38:b6:e1:27:9a:c7:9a:ef:3e:52
+salt:  75:fb:1a:49:17:da:0d:51:d2:79:14:b2:bd:a8:68:ee:ee:61:85:de:ea:37:50:11:c9:bf:4a:c5:3f:bc:71:ab
+ubu:  54:cb:b2:db:95:e1:b9:c8:b5:0a:14:64:ca:32:82:fb:e7:91:e8:a3:3d:f7:10:86:87:5b:a0:04:2f:67:0a:5d
+----
+
+We use SSH as an out-of-band mechanism to get the fingerprints and confirm that they are the same:
+
+----
+$ for v in salt fbsd ubu; echo $v; vagrant ssh $v -c "sudo salt-call --local key.finger"; end
+salt
+local:
+    75:fb:1a:49:17:da:0d:51:d2:79:14:b2:bd:a8:68:ee:ee:61:85:de:ea:37:50:11:c9:bf:4a:c5:3f:bc:71:ab
+fbsd
+local:
+    44:55:04:dc:29:05:87:01:66:dc:4f:ca:3e:0d:63:39:77:52:65:11:89:96:38:b6:e1:27:9a:c7:9a:ef:3e:52
+ubu
+local:
+    54:cb:b2:db:95:e1:b9:c8:b5:0a:14:64:ca:32:82:fb:e7:91:e8:a3:3d:f7:10:86:87:5b:a0:04:2f:67:0a:5d
+----
+
+We can now safely accept
+
+----
+sudo salt-key -a salt,ubu,fbsd
+The following keys are going to be accepted:
+Unaccepted Keys:
+fbsd
+salt
+ubu
+Proceed? [n/Y] y
+----
+
+
+Automatically adding host names of minions once their key is accepted, via reactor :-)
+
+Use the simple DNSMASQ daemon, that does both DNS and DHCP
+https://github.com/saltstack-formulas/dnsmasq-formula
+
+
+

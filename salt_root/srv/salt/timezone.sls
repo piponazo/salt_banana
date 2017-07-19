@@ -1,0 +1,2 @@
+Europe/Zurich:
+  timezone.system

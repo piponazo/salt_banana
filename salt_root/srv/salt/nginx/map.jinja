@@ -1,0 +1,11 @@
+
+{% set nginx = salt['grains.filter_by']({
+    'default': {
+        'doc_root': '/var/www/html',
+    },
+    'Arch': {
+        'doc_root' : '/usr/share/nginx/html',
+    },
+},
+grain='os_family',
+merge=salt['pillar.get']('nginx:lookup'), base='default') %}

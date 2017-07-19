@@ -1,0 +1,5 @@
+base:
+  '*':
+    - timezone
+    - packages
+    - nginx
