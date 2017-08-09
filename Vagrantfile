@@ -67,6 +67,11 @@ Vagrant.configure("2") do |config|
         master_config.vm.synced_folder "#{SALT_ROOT}/srv",      "/srv"
         master_config.vm.synced_folder "#{SALT_ROOT}/etc/salt", "/etc/salt"
 
+        # Work around the fact that the synced folders are mounted way too late
+        # in the boot process and the salt minion doesn’t find the correct configuration.
+        master_config.vm.provision "shell", run: "always", inline: "systemctl restart salt-master"
+        master_config.vm.provision "shell", run: "always", inline: "systemctl restart salt-minion"
+
         master_config.vm.provision :salt do |salt|
             salt.install_master = true
             #salt.install_type = "stable"
