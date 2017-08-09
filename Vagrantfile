@@ -92,6 +92,7 @@ Vagrant.configure("2") do |config|
             minion_config.vm.hostname = minion[:name]
             minion_config.vm.provider "virtualbox" do |vb|
                 vb.name = "#{PROJECT}_#{minion[:name]}"
+                vb.customize ["modifyvm", :id, "--vram", "20"]
             end
             # minion_config.vm.network "private_network", type: "dhcp"
             minion_config.vm.network "private_network", ip: "#{minion[:ipv4]}"
